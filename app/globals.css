@@ -1,26 +1,56 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ink: #1a1b1c;
+  --color-paper: #fcfcfc;
+  --color-dot: #a0a4ab;
+  --color-panel: #f3f3f4;
+  --color-panel-dark: #e1e1e2;
+  --color-muted: #c1c2c3;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #fcfcfc;
+  color: #1a1b1c;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+@layer components {
+  /* small label text used all over the site */
+  .label {
+    font-size: 14px;
+    line-height: 24px;
+    text-transform: uppercase;
+  }
+
+  .label-bold {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+
+  .button-text {
+    font-size: 14px;
+    line-height: 16px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
 }
