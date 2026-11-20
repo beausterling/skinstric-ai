@@ -14,6 +14,31 @@ import { saveDemographics } from "@/lib/storage";
 
 const optionSizes = [{ size: 482, opacity: 0.3 }, { size: 444, opacity: 0.6 }, { size: 405 }];
 
+// the line from the label to the icon. it goes through the outer circle and ends on the inner one,
+// and gets shorter while the icon grows on hover so it never sticks into the icon
+function Connector({ side, className }: { side: "camera" | "gallery"; className: string }) {
+  const camera = side === "camera";
+  return (
+    <svg
+      width="67"
+      height="60"
+      viewBox="0 0 67 60"
+      fill="none"
+      className={`pointer-events-none overflow-visible peer-hover:[--trim:-6.6px] ${className}`}
+      aria-hidden
+    >
+      {/* the path starts at the icon so the dash offset trims that end */}
+      <path
+        d={camera ? "M-3.33 62.85L62.96 4.04" : "M69.95 -2.54L4.04 56.1"}
+        stroke="#1A1B1C"
+        strokeDasharray="88.6 100"
+        className="[stroke-dashoffset:var(--trim,0px)] transition-[stroke-dashoffset] duration-500 ease-out"
+      />
+      <circle cx={camera ? 64.47 : 2.53} cy={camera ? 2.53 : 57.45} r="2.02" stroke="#1A1B1C" />
+    </svg>
+  );
+}
+
 export default function Result() {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
@@ -73,7 +98,7 @@ export default function Result() {
           <button
             onClick={() => setShowModal(true)}
             aria-label="Allow A.I. to scan your face"
-            className="relative rounded-full outline-offset-4 transition-transform duration-500 ease-out hover:scale-[1.12] focus:outline-none focus-visible:outline-1 focus-visible:outline-ink"
+            className="peer relative rounded-full outline-offset-4 transition-transform duration-500 ease-out hover:scale-[1.12] focus:outline-none focus-visible:outline-1 focus-visible:outline-ink"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -82,10 +107,8 @@ export default function Result() {
               className="h-[90px] w-[90px] sm:h-[117px] sm:w-[117px]"
             />
           </button>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/icons/connector-camera.svg"
-            alt=""
+          <Connector
+            side="camera"
             className="absolute top-[calc(50%-98px)] left-[calc(50%+40px)] hidden sm:block"
           />
           <p className="label absolute top-[calc(50%+56px)] left-1/2 -translate-x-1/2 text-center text-[12px] leading-5 whitespace-nowrap sm:top-[calc(50%-115px)] sm:left-[calc(50%+112px)] sm:translate-x-0 sm:text-left sm:text-[14px] sm:leading-6">
@@ -132,7 +155,7 @@ export default function Result() {
             <button
               onClick={() => fileInput.current?.click()}
               aria-label="Allow A.I. access gallery"
-              className="relative rounded-full outline-offset-4 transition-transform duration-500 ease-out hover:scale-[1.12] focus:outline-none focus-visible:outline-1 focus-visible:outline-ink"
+              className="peer relative rounded-full outline-offset-4 transition-transform duration-500 ease-out hover:scale-[1.12] focus:outline-none focus-visible:outline-1 focus-visible:outline-ink"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -141,10 +164,8 @@ export default function Result() {
                 className="h-[90px] w-[90px] sm:h-[117px] sm:w-[117px]"
               />
             </button>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/icons/connector-gallery.svg"
-              alt=""
+            <Connector
+              side="gallery"
               className="absolute top-[calc(50%+40px)] right-[calc(50%+37px)] hidden sm:block"
             />
             <p className="label absolute top-[calc(50%+56px)] right-1/2 translate-x-1/2 text-center text-[12px] leading-5 whitespace-nowrap sm:top-[calc(50%+85px)] sm:right-[calc(50%+111px)] sm:translate-x-0 sm:text-right sm:text-[14px] sm:leading-6">
