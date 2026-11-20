@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
+  /* the design uses Roobert, it is only used if it is installed on the device */
+  --font-sans: "Roobert TRIAL", "Roobert-TRIAL", var(--font-geist-sans);
   --color-ink: #1a1b1c;
   --color-paper: #fcfcfc;
   --color-dot: #a0a4ab;
@@ -18,7 +19,13 @@ body {
 body {
   background: #fcfcfc;
   color: #1a1b1c;
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family:
+    "Roobert TRIAL",
+    "Roobert-TRIAL",
+    var(--font-geist-sans),
+    Arial,
+    Helvetica,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
