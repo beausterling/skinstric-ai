@@ -174,7 +174,7 @@ export default function Summary() {
             Reset
           </button>
           <button
-            onClick={() => router.push("/select")}
+            onClick={() => router.push("/complete")}
             className="button-text border border-ink bg-ink px-4 py-[8.5px] text-paper"
           >
             Confirm
