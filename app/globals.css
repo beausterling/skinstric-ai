@@ -16,16 +16,23 @@ body {
   height: 100%;
 }
 
+/* Roobert needs slightly tighter letter spacing than Geist to match the design.
+   FontCheck adds the roobert class when the font is installed */
+html {
+  --tighten: 0em;
+  --tighten-title: 0em;
+}
+
+html.roobert {
+  --tighten: -0.006em;
+  --tighten-title: -0.01em;
+}
+
 body {
   background: #fcfcfc;
   color: #1a1b1c;
   font-family:
-    "Roobert TRIAL",
-    "Roobert-TRIAL",
-    var(--font-geist-sans),
-    Arial,
-    Helvetica,
-    sans-serif;
+    "Roobert TRIAL", "Roobert-TRIAL", var(--font-geist-sans), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -42,6 +49,7 @@ button:disabled {
   .label {
     font-size: 14px;
     line-height: 24px;
+    letter-spacing: var(--tighten);
     text-transform: uppercase;
   }
 
@@ -49,7 +57,7 @@ button:disabled {
     font-size: 16px;
     line-height: 24px;
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: calc(-0.02em + var(--tighten));
     text-transform: uppercase;
   }
 
@@ -57,7 +65,7 @@ button:disabled {
     font-size: 14px;
     line-height: 16px;
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: calc(-0.02em + var(--tighten));
     text-transform: uppercase;
   }
 }
