@@ -97,6 +97,12 @@ export default function Testing() {
     }
   }
 
+  // clicking anywhere on the page puts the cursor back in the input
+  function focusInput(e: React.MouseEvent) {
+    if ((e.target as HTMLElement).closest("a, button")) return;
+    input.current?.focus();
+  }
+
   function goBack() {
     setError("");
     setStep("name");
@@ -109,7 +115,11 @@ export default function Testing() {
   }
 
   return (
-    <main ref={container} className="relative h-screen min-h-[600px] overflow-hidden">
+    <main
+      ref={container}
+      onClick={focusInput}
+      className="relative h-screen min-h-[600px] overflow-hidden"
+    >
       <Header />
       <p className="label-bold absolute top-[86px] left-4 sm:left-8">To start analysis</p>
 
@@ -148,7 +158,7 @@ export default function Testing() {
                 onChange={(e) => handleChange(e.target.value)}
                 placeholder={questions[step]}
                 autoComplete="off"
-                className="absolute inset-0 w-full bg-transparent px-[2px] pt-[3px] text-center outline-none placeholder:text-ink lg:pt-[6px]"
+                className="absolute inset-0 w-full bg-transparent px-[2px] pt-[3px] text-center outline-none placeholder:text-ink/50 lg:pt-[6px]"
               />
             </div>
             <p className="label mt-3 h-6 text-[12px] text-red-700 normal-case sm:text-[14px]">
