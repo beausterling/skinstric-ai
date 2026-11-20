@@ -1,8 +1,7 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* the design uses Roobert, it is only used if it is installed on the device */
-  --font-sans: "Roobert TRIAL", "Roobert-TRIAL", var(--font-geist-sans);
+  --font-sans: var(--font-roobert);
   --color-ink: #1a1b1c;
   --color-paper: #fcfcfc;
   --color-dot: #a0a4ab;
@@ -16,14 +15,8 @@ body {
   height: 100%;
 }
 
-/* Roobert needs slightly tighter letter spacing than Geist to match the design.
-   FontCheck adds the roobert class when the font is installed */
+/* the font needs slightly tighter letter spacing than the Figma values to match the design */
 html {
-  --tighten: 0em;
-  --tighten-title: 0em;
-}
-
-html.roobert {
   --tighten: -0.006em;
   --tighten-title: -0.01em;
 }
@@ -31,8 +24,7 @@ html.roobert {
 body {
   background: #fcfcfc;
   color: #1a1b1c;
-  font-family:
-    "Roobert TRIAL", "Roobert-TRIAL", var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-roobert), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
