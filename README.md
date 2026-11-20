@@ -17,16 +17,16 @@ Live site: https://skinstric-ai-six.vercel.app
 **Phase 1: introduce yourself**
 
 - Name and location form that matches the Figma design
-- Validation so only letters are accepted (no numbers or symbols)
+- Validation so only letters are accepted (no numbers or symbols, and at least one letter)
 - Sends the details to the Phase 1 API and saves them in local storage
 - Back and proceed buttons
 
 **Phase 2: upload your image**
 
 - Upload a photo from your gallery, it is resized and sent to the Phase 2 API as Base64
-- Demographics page with race, age and sex, sorted from highest to lowest and shown to 2 decimal places
+- Demographics page with race, age and sex. Scores are whole numbers like the Figma file, race and sex are sorted from highest to lowest and ages from youngest to oldest
 - Click any score to set your actual attribute, the sidebar and the confidence ring update
-- Reset goes back to the A.I. estimate
+- Reset goes back to the A.I. estimate, Confirm saves your corrections and goes to a congratulations page
 
 **Phase 3: take a selfie**
 

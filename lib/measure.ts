@@ -2,11 +2,19 @@
 // so a line can start and end exactly on the letters.
 // the text is drawn on a hidden canvas and the columns with ink are counted,
 // because measureText does not report the ink edges in Safari
+// the same text in the same font always gives the same answer, so it is only measured once
+const measured = new Map<string, { left: number; right: number }>();
+
 export function letterEdges(text: string, element: HTMLElement) {
   const none = { left: 0, right: 0 };
   if (!text.trim()) return none;
 
   const style = getComputedStyle(element);
+  const key = [text, style.fontSize, style.fontWeight, style.letterSpacing, style.paddingLeft].join(
+    "|",
+  );
+  const known = measured.get(key);
+  if (known) return known;
   const size = Math.ceil(parseFloat(style.fontSize));
   const padding = parseFloat(style.paddingLeft) || 0;
   const scale = 3;
@@ -47,8 +55,11 @@ export function letterEdges(text: string, element: HTMLElement) {
   }
   if (first < 0) return none;
 
-  return {
+  const edges = {
     left: padding + first / scale - margin,
     right: padding + textWidth - ((last + 1) / scale - margin),
   };
+  // not remembered before the font has loaded, the fallback font has other widths
+  if (document.fonts.status === "loaded") measured.set(key, edges);
+  return edges;
 }

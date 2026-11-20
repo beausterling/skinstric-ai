@@ -73,10 +73,10 @@ export default function Select() {
       </div>
 
       <div className="absolute bottom-9 left-4 sm:left-8">
-        <NavButton label="Back" direction="left" href="/result" />
+        <NavButton label="Back" direction="left" href="/result" strong />
       </div>
       <div className="absolute right-4 bottom-9 sm:right-8">
-        <NavButton label="Get summary" direction="right" href="/summary" />
+        <NavButton label="Get summary" direction="right" href="/summary" strong />
       </div>
     </main>
   );
