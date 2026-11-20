@@ -11,7 +11,10 @@ function toBase64(
   const canvas = document.createElement("canvas");
   canvas.width = Math.round(width * scale);
   canvas.height = Math.round(height * scale);
-  const ctx = canvas.getContext("2d")!;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    throw new Error("Could not prepare the image");
+  }
   if (mirror) {
     ctx.translate(canvas.width, 0);
     ctx.scale(-1, 1);
@@ -27,7 +30,14 @@ export function fileToDataUrl(file: File): Promise<string> {
     reader.onload = () => {
       const img = new Image();
       img.onerror = () => reject(new Error("Please choose an image file"));
-      img.onload = () => resolve(toBase64(img, img.width, img.height));
+      // an error in here would not reach the promise by itself
+      img.onload = () => {
+        try {
+          resolve(toBase64(img, img.width, img.height));
+        } catch {
+          reject(new Error("Could not prepare the image"));
+        }
+      };
       img.src = reader.result as string;
     };
     reader.readAsDataURL(file);

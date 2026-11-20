@@ -16,13 +16,17 @@ export default function LoadingRhombuses({ children }: { children?: React.ReactN
 
   useGSAP(
     () => {
-      gsap.utils.toArray<SVGRectElement>(".loading-square").forEach((square, i) => {
-        gsap.to(square, {
-          rotation: "+=360",
-          duration: squares[i].duration,
-          ease: "none",
-          repeat: -1,
-          svgOrigin: "293 293",
+      // the squares stay still for people who turned animations off
+      const media = gsap.matchMedia();
+      media.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.utils.toArray<SVGRectElement>(".loading-square").forEach((square, i) => {
+          gsap.to(square, {
+            rotation: "+=360",
+            duration: squares[i].duration,
+            ease: "none",
+            repeat: -1,
+            svgOrigin: "293 293",
+          });
         });
       });
     },

@@ -6,6 +6,8 @@ type Props = {
   href?: string;
   onClick?: () => void;
   light?: boolean;
+  // the analysis pages show the label at full strength
+  strong?: boolean;
   hideLabelOnMobile?: boolean;
   className?: string;
 };
@@ -16,6 +18,7 @@ export default function NavButton({
   href,
   onClick,
   light,
+  strong,
   hideLabelOnMobile,
   className = "",
 }: Props) {
@@ -27,9 +30,9 @@ export default function NavButton({
     <>
       <DiamondIcon direction={direction} />
       <span
-        className={`nav-button__label button-text opacity-70 transition-opacity duration-300 group-hover:opacity-100 ${
-          hideLabelOnMobile ? "hidden sm:block" : ""
-        }`}
+        className={`nav-button__label button-text transition-opacity duration-300 group-hover:opacity-100 ${
+          strong ? "" : "opacity-70"
+        } ${hideLabelOnMobile ? "hidden sm:block" : ""}`}
       >
         {label}
       </span>

@@ -17,8 +17,8 @@ const questions = {
   location: "Where are you from?",
 };
 
-// only letters, spaces, hyphens, apostrophes and periods
-const lettersOnly = /^[\p{L}\s'.-]+$/u;
+// only letters, spaces, hyphens, apostrophes and periods, with at least one letter
+const lettersOnly = /^(?=.*\p{L})[\p{L}\p{M}\s'.-]+$/u;
 
 export default function Testing() {
   const [step, setStep] = useState<Step>("name");
@@ -50,6 +50,7 @@ export default function Testing() {
   useGSAP(
     () => {
       if (step !== "loading") return;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       gsap.utils.toArray<SVGPathElement>(".rhombus").forEach((rhombus, i) => {
         gsap.to(rhombus, {
           rotation: 360,
@@ -182,11 +183,18 @@ export default function Testing() {
                 value={value}
                 onChange={(e) => handleChange(e.target.value)}
                 placeholder={questions[step]}
+                aria-label={questions[step]}
+                aria-invalid={error ? true : undefined}
+                aria-describedby="answer-error"
                 autoComplete="off"
                 className="absolute inset-y-0 -left-[0.15em] w-[calc(100%+0.3em)] bg-transparent px-[2px] pt-[3px] text-center outline-none transition-colors placeholder:text-ink placeholder:transition-colors focus:placeholder:text-ink/30 lg:pt-[6px]"
               />
             </div>
-            <p className="label mt-3 h-6 text-[12px] text-red-700 normal-case sm:text-[14px]">
+            <p
+              id="answer-error"
+              role="alert"
+              className="label mt-3 h-6 text-[12px] text-red-700 normal-case sm:text-[14px]"
+            >
               {error}
             </p>
           </form>

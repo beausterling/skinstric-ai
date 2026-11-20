@@ -19,6 +19,7 @@ export default function Camera() {
   const [error, setError] = useState("");
   const video = useRef<HTMLVideoElement>(null);
   const stream = useRef<MediaStream | null>(null);
+  const request = useRef<AbortController | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -40,6 +41,9 @@ export default function Camera() {
         }
         setStatus("live");
       } catch {
+        // turn the camera off again if the preview could not start
+        stream.current?.getTracks().forEach((track) => track.stop());
+        stream.current = null;
         if (!cancelled) {
           setError("We could not access your camera. Please allow camera access and try again.");
           setStatus("error");
@@ -52,13 +56,20 @@ export default function Camera() {
     return () => {
       cancelled = true;
       stream.current?.getTracks().forEach((track) => track.stop());
+      // cancels the analysis if the user leaves while it is running
+      request.current?.abort();
     };
   }, []);
 
   function takePicture() {
     if (!video.current) return;
-    setPhoto(videoToDataUrl(video.current));
-    setStatus("captured");
+    try {
+      setPhoto(videoToDataUrl(video.current));
+      setError("");
+      setStatus("captured");
+    } catch {
+      setError("We could not take the picture. Please try again.");
+    }
   }
 
   function retake() {
@@ -69,11 +80,15 @@ export default function Camera() {
 
   async function proceed() {
     setStatus("loading");
+    const controller = new AbortController();
+    request.current = controller;
     try {
-      const data = await analyzeImage(stripPrefix(photo));
+      const data = await analyzeImage(stripPrefix(photo), controller.signal);
+      if (controller.signal.aborted) return;
       saveDemographics(data);
       router.push("/select");
     } catch (err) {
+      if (controller.signal.aborted) return;
       setError(err instanceof Error ? err.message : "Something went wrong");
       setStatus("captured");
     }
@@ -120,6 +135,11 @@ export default function Camera() {
               className="h-[62px] w-[62px] transition-transform duration-300 group-hover:scale-110"
             />
           </button>
+          {error && (
+            <p className="label absolute top-[32%] left-1/2 w-full -translate-x-1/2 px-4 text-center text-paper normal-case">
+              {error}
+            </p>
+          )}
           <div className="absolute bottom-9 left-4 sm:left-8">
             <NavButton label="Back" direction="left" href="/result" light hideLabelOnMobile />
           </div>

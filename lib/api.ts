@@ -1,4 +1,4 @@
-import { Demographics } from "@/types/demographics";
+import { Demographics, isDemographics } from "@/types/demographics";
 
 const API_URL = "https://us-central1-frontend-simplified.cloudfunctions.net";
 
@@ -14,15 +14,20 @@ export async function submitUser(name: string, location: string) {
   return res.json();
 }
 
-export async function analyzeImage(base64: string): Promise<Demographics> {
+// the signal lets a page cancel the request when the user leaves
+export async function analyzeImage(base64: string, signal?: AbortSignal): Promise<Demographics> {
   const res = await fetch(`${API_URL}/skinstricPhaseTwo`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ image: base64 }),
+    signal,
   });
   const json = await res.json();
   if (!res.ok || !json.data) {
     throw new Error(json.message || "Could not analyze the image");
+  }
+  if (!isDemographics(json.data)) {
+    throw new Error("The analysis came back incomplete. Please try again.");
   }
   return json.data;
 }

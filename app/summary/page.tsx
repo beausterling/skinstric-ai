@@ -5,16 +5,14 @@ import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import NavButton, { DiamondIcon } from "@/components/NavButton";
 import ConfidenceCircle from "@/components/ConfidenceCircle";
-import { getDemographics } from "@/lib/storage";
-import { Category, Demographics } from "@/types/demographics";
+import { getChoices, getDemographics, saveChoices } from "@/lib/storage";
+import { Category, Choices, Demographics } from "@/types/demographics";
 
 const categories: { key: Category; label: string }[] = [
   { key: "race", label: "Race" },
   { key: "age", label: "Age" },
   { key: "gender", label: "Sex" },
 ];
-
-type Choices = Record<Category, string>;
 
 // highest score first
 function sortScores(scores: Record<string, number>) {
@@ -56,7 +54,8 @@ export default function Summary() {
     }
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setData(saved);
-    setChoices(topChoices(saved));
+    // corrections that were confirmed before are shown again
+    setChoices(getChoices(saved) ?? topChoices(saved));
   }, [router]);
 
   if (!data || !choices) {
@@ -71,6 +70,11 @@ export default function Summary() {
     choices.race !== estimate.race ||
     choices.age !== estimate.age ||
     choices.gender !== estimate.gender;
+
+  function confirm() {
+    if (choices) saveChoices(choices);
+    router.push("/complete");
+  }
 
   function step(direction: number) {
     const index = categories.findIndex((c) => c.key === category);
@@ -109,7 +113,8 @@ export default function Summary() {
             <button
               key={key}
               onClick={() => setCategory(key)}
-              className={`label-bold flex h-[104px] flex-col justify-between border-t px-4 pt-[10px] pb-[13px] text-left transition-colors duration-200 ${
+              aria-pressed={category === key}
+              className={`label-bold flex h-[104px] min-w-0 flex-col justify-between border-t px-2 pt-[10px] pb-[13px] text-left text-[13px] wrap-anywhere min-[400px]:px-4 min-[400px]:text-[16px] transition-colors duration-200 ${
                 category === key
                   ? "border-ink bg-ink text-paper"
                   : "border-ink bg-panel hover:bg-panel-dark"
@@ -143,11 +148,12 @@ export default function Summary() {
               <li key={name}>
                 <button
                   onClick={() => setChoices({ ...choices, [category]: name })}
+                  aria-pressed={name === selected}
                   className={`flex h-12 w-full items-center gap-3 px-4 text-[16px] leading-6 tracking-[calc(-0.02em+var(--tighten))] transition-colors duration-200 ${
                     name === selected ? "bg-ink text-paper" : "hover:bg-panel-dark"
                   }`}
                 >
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
                     <path d="M11.3 6L6 0.7L0.7 6L6 11.3L11.3 6Z" stroke="currentColor" />
                     {name === selected && <path d="M9 6L6 3L3 6L6 9L9 6Z" fill="currentColor" />}
                   </svg>
@@ -161,7 +167,7 @@ export default function Summary() {
       </div>
 
       <div className="flex flex-wrap items-end justify-between gap-4 px-4 pt-8 pb-9 sm:px-8">
-        <NavButton label="Back" direction="left" href="/select" />
+        <NavButton label="Back" direction="left" href="/select" strong />
         <p className="order-last w-full text-center text-[16px] leading-6 tracking-[calc(-0.02em+var(--tighten))] text-dot lg:absolute lg:bottom-[42px] lg:left-1/2 lg:w-auto lg:-translate-x-[calc(50%-19px)]">
           If A.I. estimate is wrong, select the correct one.
         </p>
@@ -174,7 +180,7 @@ export default function Summary() {
             Reset
           </button>
           <button
-            onClick={() => router.push("/complete")}
+            onClick={confirm}
             className="button-text border border-ink bg-ink px-4 py-[8.5px] text-paper"
           >
             Confirm
