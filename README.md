@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Skinstric AI
 
-## Getting Started
+A build of the Skinstric.ai skin analysis flow for the Frontend Simplified x Skinstric internship. You enter your name and location, take a selfie or upload a photo, and the A.I. gives its estimate of your demographics, which you can then correct.
 
-First, run the development server:
+Live site: https://skinstric-ai-six.vercel.app
+
+## Built with
+
+- Next.js (App Router) and React
+- TypeScript
+- Tailwind CSS
+- GSAP for the animations
+- Deployed on Vercel
+
+## Features
+
+**Phase 1: introduce yourself**
+
+- Name and location form that matches the Figma design
+- Validation so only letters are accepted (no numbers or symbols)
+- Sends the details to the Phase 1 API and saves them in local storage
+- Back and proceed buttons
+
+**Phase 2: upload your image**
+
+- Upload a photo from your gallery, it is resized and sent to the Phase 2 API as Base64
+- Demographics page with race, age and sex, sorted from highest to lowest and shown to 2 decimal places
+- Click any score to set your actual attribute, the sidebar and the confidence ring update
+- Reset goes back to the A.I. estimate
+
+**Phase 3: take a selfie**
+
+- Camera permission popup, live camera preview and a take picture button
+- Retake or proceed with the photo, it goes through the same API as the upload
+- Works on tablet and mobile
+
+## Running it locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Pages
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Route      | What it does                               |
+| ---------- | ------------------------------------------ |
+| `/`        | Landing page                               |
+| `/testing` | Name and location form                     |
+| `/result`  | Choose between the camera and the gallery  |
+| `/camera`  | Take a selfie                              |
+| `/select`  | Pick which part of the analysis to look at |
+| `/summary` | Demographics results                       |
