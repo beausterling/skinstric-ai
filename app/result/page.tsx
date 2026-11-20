@@ -64,7 +64,8 @@ export default function Result() {
 
       <div className="flex min-h-screen flex-col items-center justify-center gap-0 pt-28 pb-24 lg:block lg:min-h-0 lg:p-0">
         {/* camera */}
-        <div className="option relative flex h-[300px] w-[300px] items-center justify-center sm:h-[400px] sm:w-[400px] lg:absolute lg:top-[calc(50%+1px)] lg:left-1/4 lg:h-[482px] lg:w-[482px] lg:-translate-x-1/2 lg:-translate-y-1/2">
+        {/* z-10 keeps the popup in front of the gallery option */}
+        <div className="option relative z-10 flex h-[300px] w-[300px] items-center justify-center sm:h-[400px] sm:w-[400px] lg:absolute lg:top-[calc(50%+1px)] lg:left-1/4 lg:h-[482px] lg:w-[482px] lg:-translate-x-1/2 lg:-translate-y-1/2">
           <Rhombuses
             sizes={optionSizes}
             className="absolute top-1/2 left-1/2 max-w-none -translate-x-1/2 -translate-y-1/2 scale-[0.62] sm:scale-[0.83] lg:scale-100"
@@ -72,7 +73,7 @@ export default function Result() {
           <button
             onClick={() => setShowModal(true)}
             aria-label="Allow A.I. to scan your face"
-            className="relative transition-transform duration-500 ease-out hover:scale-[1.12]"
+            className="relative rounded-full outline-offset-4 transition-transform duration-500 ease-out hover:scale-[1.12] focus:outline-none focus-visible:outline-1 focus-visible:outline-ink"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -131,7 +132,7 @@ export default function Result() {
             <button
               onClick={() => fileInput.current?.click()}
               aria-label="Allow A.I. access gallery"
-              className="relative transition-transform duration-500 ease-out hover:scale-[1.12]"
+              className="relative rounded-full outline-offset-4 transition-transform duration-500 ease-out hover:scale-[1.12] focus:outline-none focus-visible:outline-1 focus-visible:outline-ink"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
