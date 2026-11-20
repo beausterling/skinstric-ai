@@ -129,11 +129,14 @@ export default function Testing() {
               proceed();
             }}
           >
-            <label htmlFor="answer" className="label mb-[2px] opacity-40">
+            <label
+              htmlFor="answer"
+              className={`label mb-[2px] opacity-40 ${value ? "" : "lg:-translate-x-[7px]"}`}
+            >
               {value ? questions[step] : "Click to type"}
             </label>
             {/* the hidden text sets the width so the underline is as wide as the text */}
-            <div className="relative grid max-w-[92vw] border-b border-ink text-[32px] leading-[1.07] tracking-[-0.07em] sm:text-[44px] lg:text-[60px]">
+            <div className="relative grid max-w-[92vw] border-b border-ink text-[32px] leading-[1.07] tracking-[calc(-0.07em+var(--tighten-title))] sm:text-[44px] lg:text-[60px]">
               <span className="invisible col-start-1 row-start-1 px-[2px] whitespace-pre">
                 {value || questions[step]}
               </span>
@@ -145,7 +148,7 @@ export default function Testing() {
                 onChange={(e) => handleChange(e.target.value)}
                 placeholder={questions[step]}
                 autoComplete="off"
-                className="absolute inset-0 w-full bg-transparent px-[2px] text-center outline-none placeholder:text-ink"
+                className="absolute inset-0 w-full bg-transparent px-[2px] pt-[3px] text-center outline-none placeholder:text-ink lg:pt-[6px]"
               />
             </div>
             <p className="label mt-3 h-6 text-[12px] text-red-700 normal-case sm:text-[14px]">
@@ -160,7 +163,7 @@ export default function Testing() {
 
         {step === "done" && (
           <div className="flex flex-col items-center gap-3">
-            <p className="text-[32px] leading-[1.07] tracking-[-0.07em] sm:text-[44px] lg:text-[60px]">
+            <p className="text-[32px] leading-[1.07] tracking-[calc(-0.07em+var(--tighten-title))] sm:text-[44px] lg:text-[60px]">
               Thank you!
             </p>
             <p className="label opacity-60">Proceed for the next step</p>
