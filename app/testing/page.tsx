@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import Header from "@/components/Header";
 import NavButton from "@/components/NavButton";
 import Rhombuses from "@/components/Rhombuses";
+import { letterEdges } from "@/lib/measure";
 import { submitUser } from "@/lib/api";
 import { saveUser } from "@/lib/storage";
 
@@ -26,6 +27,7 @@ export default function Testing() {
   const [error, setError] = useState("");
   const input = useRef<HTMLInputElement>(null);
   const container = useRef<HTMLElement>(null);
+  const underline = useRef<HTMLSpanElement>(null);
 
   const typing = step === "name" || step === "location";
   const value = step === "name" ? name : location;
@@ -68,6 +70,23 @@ export default function Testing() {
     lastStep.current = step;
     input.current?.focus();
   }, [step]);
+
+  // the underline starts on the first letter and ends on the last one
+  useLayoutEffect(() => {
+    function place() {
+      const line = underline.current;
+      if (!line || !input.current || !typing) return;
+      const edges = letterEdges(value || questions[step], input.current);
+      line.style.left = `${edges.left}px`;
+      line.style.right = `${edges.right}px`;
+    }
+
+    place();
+    // measure again when the font has loaded or the text size changes
+    document.fonts.ready.then(place);
+    window.addEventListener("resize", place);
+    return () => window.removeEventListener("resize", place);
+  }, [value, step, typing]);
 
   function validate(text: string) {
     if (!text.trim()) {
@@ -149,11 +168,13 @@ export default function Testing() {
             >
               {value ? questions[step] : "Click to type"}
             </label>
-            {/* the hidden text sets the width so the underline is as wide as the text */}
-            <div className="relative grid max-w-[92vw] border-b border-ink text-[32px] leading-[1.07] tracking-[calc(-0.07em+var(--tighten-title))] sm:text-[44px] lg:text-[60px]">
+            {/* the hidden text sets the width, the underline is placed from the measured letters */}
+            <div className="relative grid max-w-[92vw] pb-px text-[32px] leading-[1.07] tracking-[calc(-0.07em+var(--tighten-title))] sm:text-[44px] lg:text-[60px]">
               <span className="invisible col-start-1 row-start-1 px-[2px] whitespace-pre">
                 {value || questions[step]}
               </span>
+              <span ref={underline} className="absolute right-0 bottom-0 left-0 h-px bg-ink" />
+              {/* the input is a little wider than the text so the last letter is not cut off */}
               <input
                 ref={input}
                 id="answer"
@@ -162,7 +183,7 @@ export default function Testing() {
                 onChange={(e) => handleChange(e.target.value)}
                 placeholder={questions[step]}
                 autoComplete="off"
-                className="absolute inset-0 w-full bg-transparent px-[2px] pt-[3px] text-center outline-none transition-colors placeholder:text-ink placeholder:transition-colors focus:placeholder:text-ink/30 lg:pt-[6px]"
+                className="absolute inset-y-0 -left-[0.15em] w-[calc(100%+0.3em)] bg-transparent px-[2px] pt-[3px] text-center outline-none transition-colors placeholder:text-ink placeholder:transition-colors focus:placeholder:text-ink/30 lg:pt-[6px]"
               />
             </div>
             <p className="label mt-3 h-6 text-[12px] text-red-700 normal-case sm:text-[14px]">
