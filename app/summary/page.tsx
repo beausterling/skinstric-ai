@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
-import NavButton from "@/components/NavButton";
+import NavButton, { DiamondIcon } from "@/components/NavButton";
 import ConfidenceCircle from "@/components/ConfidenceCircle";
 import { getDemographics } from "@/lib/storage";
 import { Category, Demographics } from "@/types/demographics";
@@ -19,6 +19,11 @@ type Choices = Record<Category, string>;
 // highest score first
 function sortScores(scores: Record<string, number>) {
   return Object.entries(scores).sort((a, b) => b[1] - a[1]);
+}
+
+// ages are listed from youngest to oldest like the design
+function sortAges(scores: Record<string, number>) {
+  return Object.entries(scores).sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
 }
 
 function topChoices(data: Demographics): Choices {
@@ -58,8 +63,14 @@ export default function Summary() {
     return <main className="h-screen" />;
   }
 
-  const scores = sortScores(data[category]);
+  const scores = category === "age" ? sortAges(data.age) : sortScores(data[category]);
   const selected = choices[category];
+
+  function step(direction: number) {
+    const index = categories.findIndex((c) => c.key === category);
+    const next = (index + direction + categories.length) % categories.length;
+    setCategory(categories[next].key);
+  }
   const heading = category === "age" ? `${selected} y.o.` : capitalize(selected);
 
   return (
@@ -68,9 +79,20 @@ export default function Summary() {
 
       <div className="px-4 pt-[86px] sm:px-8">
         <p className="label-bold">A. I. Analysis</p>
-        <h1 className="-ml-[3px] pt-[5px] text-[44px] leading-[64px] tracking-[-0.07em] uppercase sm:-ml-[5px] sm:translate-y-[4px] sm:text-[72px]">
-          Demographics
-        </h1>
+        <div className="relative w-max">
+          <h1 className="-ml-[3px] pt-[5px] text-[44px] leading-[64px] tracking-[-0.07em] uppercase sm:-ml-[5px] sm:translate-y-[4px] sm:text-[72px]">
+            Demographics
+          </h1>
+          {/* the two arrows next to the title go to the previous and next category */}
+          <div className="absolute -top-[18px] left-[calc(100%+13px)] hidden gap-2 sm:flex">
+            <button onClick={() => step(-1)} aria-label="Previous category" className="group">
+              <DiamondIcon direction="left" />
+            </button>
+            <button onClick={() => step(1)} aria-label="Next category" className="group">
+              <DiamondIcon direction="right" />
+            </button>
+          </div>
+        </div>
         <p className="label mt-[11px]">Predicted race &amp; age</p>
       </div>
 
@@ -123,7 +145,7 @@ export default function Summary() {
                     {name === selected && <path d="M9 6L6 3L3 6L6 9L9 6Z" fill="currentColor" />}
                   </svg>
                   <span>{titleCase(name)}</span>
-                  <span className="ml-auto">{(score * 100).toFixed(2)} %</span>
+                  <span className="ml-auto">{Math.round(score * 100)} %</span>
                 </button>
               </li>
             ))}
