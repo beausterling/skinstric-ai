@@ -40,7 +40,7 @@ export default function Home() {
     gsap.to(second, { x: (direction * (first.offsetWidth - second.offsetWidth)) / 2, ...settings });
     gsap.to(`.side-${other}`, { autoAlpha: 0, ...settings });
     gsap.to(`.side-${side} .extra`, { autoAlpha: 1, scale: 1, ...settings });
-    gsap.to(`.side-${side} .nav-button__icon`, { scale: 1.77, x: direction * 17, ...settings });
+    gsap.to(`.side-${side} .nav-button__icon`, { x: direction * 17, ...settings });
     gsap.to(`.side-${side} .nav-button__label`, { x: direction * 42, ...settings });
   });
 
@@ -49,7 +49,7 @@ export default function Home() {
     gsap.to([".title", ".title-text", ".nav-button__label"], { x: 0, ...settings });
     gsap.to([".side-left", ".side-right"], { autoAlpha: 1, ...settings });
     gsap.to(".extra", { autoAlpha: 0, scale: 0.94, ...settings });
-    gsap.to(".nav-button__icon", { scale: 1, x: 0, ...settings });
+    gsap.to(".nav-button__icon", { x: 0, ...settings });
   });
 
   return (

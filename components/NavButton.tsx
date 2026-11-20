@@ -51,6 +51,9 @@ export default function NavButton({
   );
 }
 
+const grow = "origin-center transition-transform duration-500 ease-out [transform-box:fill-box]";
+
+// on hover the outline grows from 44px to 78px and a dotted diamond shows inside it
 export function DiamondIcon({ direction }: { direction: "left" | "right" }) {
   return (
     <svg
@@ -58,14 +61,28 @@ export function DiamondIcon({ direction }: { direction: "left" | "right" }) {
       height="44"
       viewBox="0 0 44 44"
       fill="none"
-      className="nav-button__icon shrink-0 transition-transform duration-300 ease-out group-hover:scale-[1.15]"
+      className="nav-button__icon shrink-0 overflow-visible"
     >
-      <path d="M43.3 22L22 0.7L0.7 22L22 43.3L43.3 22Z" stroke="currentColor" />
       <path
-        d="M28.1426 22L18.714 27.4436V16.5564L28.1426 22Z"
-        fill="currentColor"
-        transform={direction === "left" ? "rotate(180 22 22)" : undefined}
+        d="M43.3 22L22 0.7L0.7 22L22 43.3L43.3 22Z"
+        stroke="currentColor"
+        vectorEffect="non-scaling-stroke"
+        className={`${grow} group-hover:scale-[1.773]`}
       />
+      <path
+        d="M39.5 22L22 4.5L4.5 22L22 39.5L39.5 22Z"
+        stroke="currentColor"
+        strokeDasharray="1 3"
+        vectorEffect="non-scaling-stroke"
+        className={`${grow} opacity-0 transition-[transform,opacity] group-hover:scale-[1.714] group-hover:opacity-100`}
+      />
+      <g className={`${grow} group-hover:scale-[0.82]`}>
+        <path
+          d="M28.1426 22L18.714 27.4436V16.5564L28.1426 22Z"
+          fill="currentColor"
+          transform={direction === "left" ? "rotate(180 22 22)" : undefined}
+        />
+      </g>
     </svg>
   );
 }
