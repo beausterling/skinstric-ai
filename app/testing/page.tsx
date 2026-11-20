@@ -61,7 +61,11 @@ export default function Testing() {
     { scope: container, dependencies: [step], revertOnUpdate: true },
   );
 
+  // the first question waits for a click, after that the cursor stays in the input
+  const lastStep = useRef(step);
   useEffect(() => {
+    if (lastStep.current === step) return;
+    lastStep.current = step;
     input.current?.focus();
   }, [step]);
 
@@ -158,7 +162,7 @@ export default function Testing() {
                 onChange={(e) => handleChange(e.target.value)}
                 placeholder={questions[step]}
                 autoComplete="off"
-                className="absolute inset-0 w-full bg-transparent px-[2px] pt-[3px] text-center outline-none placeholder:text-ink/50 lg:pt-[6px]"
+                className="absolute inset-0 w-full bg-transparent px-[2px] pt-[3px] text-center outline-none transition-colors placeholder:text-ink placeholder:transition-colors focus:placeholder:text-ink/30 lg:pt-[6px]"
               />
             </div>
             <p className="label mt-3 h-6 text-[12px] text-red-700 normal-case sm:text-[14px]">
