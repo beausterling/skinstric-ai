@@ -1,69 +1,143 @@
-import Image from "next/image";
+"use client";
+
+import { useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import Header from "@/components/Header";
+import NavButton from "@/components/NavButton";
+import Rhombuses from "@/components/Rhombuses";
+
+type Side = "left" | "right";
 
 export default function Home() {
+  const container = useRef<HTMLElement>(null);
+
+  const { contextSafe } = useGSAP(
+    () => {
+      gsap.from(".title-line", {
+        yPercent: 40,
+        autoAlpha: 0,
+        duration: 1,
+        stagger: 0.12,
+        ease: "power3.out",
+      });
+      gsap.from(".fade-in", { autoAlpha: 0, duration: 1, delay: 0.4 });
+      gsap.set(".extra", { autoAlpha: 0, scale: 0.94, transformOrigin: "50% 50%" });
+    },
+    { scope: container },
+  );
+
+  // hovering a side button slides the title to the other side like in the design
+  const hoverSide = contextSafe((side: Side) => {
+    if (window.innerWidth < 1024) return;
+    const other = side === "right" ? "left" : "right";
+    const direction = side === "right" ? -1 : 1;
+    const [first, second] = gsap.utils.toArray<HTMLElement>(".title-text");
+    const gap = (window.innerWidth - first.offsetWidth) / 2 - 32;
+    const settings = { duration: 0.8, ease: "power3.out", overwrite: true };
+
+    gsap.to(".title", { x: direction * gap, ...settings });
+    gsap.to(second, { x: (direction * (first.offsetWidth - second.offsetWidth)) / 2, ...settings });
+    gsap.to(`.side-${other}`, { autoAlpha: 0, ...settings });
+    gsap.to(`.side-${side} .extra`, { autoAlpha: 1, scale: 1, ...settings });
+    gsap.to(`.side-${side} .nav-button__icon`, { scale: 1.77, x: direction * 17, ...settings });
+    gsap.to(`.side-${side} .nav-button__label`, { x: direction * 42, ...settings });
+  });
+
+  const leaveSide = contextSafe(() => {
+    const settings = { duration: 0.8, ease: "power3.out", overwrite: true };
+    gsap.to([".title", ".title-text", ".nav-button__label"], { x: 0, ...settings });
+    gsap.to([".side-left", ".side-right"], { autoAlpha: 1, ...settings });
+    gsap.to(".extra", { autoAlpha: 0, scale: 0.94, ...settings });
+    gsap.to(".nav-button__icon", { scale: 1, x: 0, ...settings });
+  });
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+    <main ref={container} className="relative h-screen min-h-[600px] overflow-hidden">
+      <Header showCode />
+
+      {/* desktop: half diamonds and buttons on each side */}
+      <div className="side-left fade-in hidden lg:block">
+        <div className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2">
+          <Rhombuses sizes={[{ size: 602 }]} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            <Rhombuses
+              sizes={[
+                { size: 682, opacity: 0.6 },
+                { size: 762, opacity: 0.3 },
+              ]}
+              className="extra invisible max-w-none"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </div>
         </div>
-      </main>
-    </div>
+        <div
+          className="absolute top-1/2 left-8 -translate-y-1/2"
+          onMouseEnter={() => hoverSide("left")}
+          onMouseLeave={leaveSide}
+        >
+          <NavButton label="Discover A.I." direction="left" />
+        </div>
+      </div>
+
+      <div className="side-right fade-in hidden lg:block">
+        <div className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2">
+          <Rhombuses sizes={[{ size: 602 }]} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            <Rhombuses
+              sizes={[
+                { size: 682, opacity: 0.6 },
+                { size: 762, opacity: 0.3 },
+              ]}
+              className="extra invisible max-w-none"
+            />
+          </div>
+        </div>
+        <div
+          className="absolute top-1/2 right-8 -translate-y-1/2"
+          onMouseEnter={() => hoverSide("right")}
+          onMouseLeave={leaveSide}
+        >
+          <NavButton label="Take test" direction="right" href="/testing" />
+        </div>
+      </div>
+
+      {/* mobile: diamonds sit behind the title */}
+      <div className="fade-in absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 lg:hidden">
+        <Rhombuses
+          sizes={[{ size: 420 }, { size: 480, opacity: 0.6 }, { size: 540, opacity: 0.3 }]}
+          className="max-w-none"
+        />
+      </div>
+
+      {/* the outer div centers the title, gsap moves the inner one */}
+      <div className="absolute top-1/2 left-1/2 w-max -translate-x-1/2 -translate-y-1/2">
+        <div className="title flex flex-col items-center">
+          <h1 className="text-center text-[60px] leading-[0.95] font-light tracking-[-0.07em] sm:text-[80px] lg:text-[clamp(88px,8.9vw,128px)] lg:translate-y-[7px] lg:leading-[0.9375]">
+            <span className="title-line block">
+              <span className="title-text inline-block">Sophisticated</span>
+            </span>
+            <span className="title-line block">
+              <span className="title-text inline-block">skincare</span>
+            </span>
+          </h1>
+
+          <div className="fade-in mt-6 flex flex-col items-center gap-8 lg:hidden">
+            <p className="label w-[300px] text-center text-[12px] leading-5 opacity-70 sm:w-[316px] sm:text-[14px] sm:leading-6">
+              Skinstric developed an A.I. that creates a highly-personalised routine tailored to
+              what your skin needs.
+            </p>
+            <NavButton label="Enter experience" direction="right" href="/testing" />
+          </div>
+        </div>
+      </div>
+
+      <p className="fade-in label absolute bottom-[26px] left-8 hidden lg:block">
+        Skinstric developed an A.I. that creates
+        <br />
+        a highly-personalised routine tailored to
+        <br />
+        what your skin needs.
+      </p>
+    </main>
   );
 }
