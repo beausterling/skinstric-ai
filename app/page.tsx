@@ -112,12 +112,12 @@ export default function Home() {
       {/* the outer div centers the title, gsap moves the inner one */}
       <div className="absolute top-1/2 left-1/2 w-max -translate-x-1/2 -translate-y-1/2">
         <div className="title flex flex-col items-center">
-          <h1 className="text-center text-[60px] leading-[0.95] font-light tracking-[-0.07em] sm:text-[80px] lg:text-[clamp(88px,8.9vw,128px)] lg:translate-y-[7px] lg:leading-[0.9375]">
+          <h1 className="text-center text-[60px] leading-[0.95] font-light tracking-[calc(-0.072em+var(--tighten-title))] sm:text-[80px] lg:text-[clamp(88px,8.9vw,128px)] lg:translate-y-[7px] lg:leading-[0.9375]">
             <span className="title-line block">
-              <span className="title-text inline-block">Sophisticated</span>
+              <span className="title-text inline-block pr-[0.08em]">Sophisticated</span>
             </span>
             <span className="title-line block">
-              <span className="title-text inline-block">skincare</span>
+              <span className="title-text inline-block pr-[0.08em]">skincare</span>
             </span>
           </h1>
 

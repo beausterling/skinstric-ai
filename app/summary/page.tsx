@@ -117,7 +117,7 @@ export default function Summary() {
 
         {/* the selected result with the confidence ring */}
         <div className="relative flex min-h-[380px] flex-col border-t border-ink bg-panel lg:min-h-0">
-          <p className="px-[15px] pt-[19px] text-[32px] leading-10 tracking-[-0.05em] sm:text-[40px]">
+          <p className="px-[15px] pt-[21px] text-[32px] leading-10 tracking-[calc(-0.05em+var(--tighten-title))] sm:text-[40px]">
             {heading}
           </p>
           <div className="flex min-h-0 flex-1 items-end justify-center p-4 pb-6 lg:justify-end">
@@ -127,7 +127,7 @@ export default function Summary() {
 
         {/* every score, click one to correct the A.I. */}
         <div className="border-t border-ink bg-panel">
-          <div className="flex justify-between px-4 pt-[13px] pb-[10px] text-[16px] leading-6 font-medium tracking-[-0.02em] uppercase opacity-80">
+          <div className="flex justify-between px-4 pt-[13px] pb-[10px] text-[16px] leading-6 font-medium tracking-[calc(-0.02em+var(--tighten))] uppercase opacity-80">
             <span>{categories.find((c) => c.key === category)?.label}</span>
             <span>A. I. confidence</span>
           </div>
@@ -136,7 +136,7 @@ export default function Summary() {
               <li key={name}>
                 <button
                   onClick={() => setChoices({ ...choices, [category]: name })}
-                  className={`flex h-12 w-full items-center gap-3 px-4 text-[16px] leading-6 tracking-[-0.02em] transition-colors duration-200 ${
+                  className={`flex h-12 w-full items-center gap-3 px-4 text-[16px] leading-6 tracking-[calc(-0.02em+var(--tighten))] transition-colors duration-200 ${
                     name === selected ? "bg-ink text-paper" : "hover:bg-panel-dark"
                   }`}
                 >
@@ -155,7 +155,7 @@ export default function Summary() {
 
       <div className="flex flex-wrap items-end justify-between gap-4 px-4 pt-8 pb-9 sm:px-8">
         <NavButton label="Back" direction="left" href="/select" />
-        <p className="order-last w-full text-center text-[16px] leading-6 tracking-[-0.02em] text-dot lg:absolute lg:bottom-[42px] lg:left-1/2 lg:w-auto lg:-translate-x-[calc(50%-19px)]">
+        <p className="order-last w-full text-center text-[16px] leading-6 tracking-[calc(-0.02em+var(--tighten))] text-dot lg:absolute lg:bottom-[42px] lg:left-1/2 lg:w-auto lg:-translate-x-[calc(50%-19px)]">
           If A.I. estimate is wrong, select the correct one.
         </p>
         <div className="flex gap-[17px]">

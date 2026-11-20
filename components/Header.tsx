@@ -24,7 +24,7 @@ export default function Header({ section = "Intro", light, showCode }: Props) {
         </div>
       </div>
       {showCode && (
-        <button className="bg-ink px-4 py-2 text-[10px] leading-4 font-semibold tracking-[-0.02em] text-paper uppercase">
+        <button className="bg-ink px-4 py-2 text-[10px] leading-4 font-semibold tracking-[calc(-0.02em+var(--tighten))] text-paper uppercase">
           Enter code
         </button>
       )}
