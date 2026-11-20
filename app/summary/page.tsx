@@ -74,7 +74,7 @@ export default function Summary() {
   const heading = category === "age" ? `${selected} y.o.` : capitalize(selected);
 
   return (
-    <main className="relative flex min-h-screen flex-col lg:h-screen lg:min-h-[720px]">
+    <main className="relative flex min-h-screen flex-col lg:h-screen lg:min-h-[850px]">
       <Header section="Analysis" />
 
       <div className="px-4 pt-[86px] sm:px-8">
@@ -96,7 +96,7 @@ export default function Summary() {
         <p className="label mt-[11px]">Predicted race &amp; age</p>
       </div>
 
-      <div className="mt-6 grid flex-1 gap-4 px-4 sm:px-8 lg:mt-[90px] lg:min-h-0 lg:grid-cols-[208px_1fr_448px]">
+      <div className="mt-6 grid flex-1 gap-4 px-4 sm:px-8 lg:mt-[clamp(24px,calc(100vh-870px),90px)] lg:min-h-0 lg:grid-cols-[208px_1fr_448px]">
         {/* the three results on the left */}
         <div className="grid grid-cols-3 gap-2 lg:flex lg:flex-col">
           {categories.map(({ key, label }) => (
@@ -120,7 +120,8 @@ export default function Summary() {
           <p className="px-[15px] pt-[21px] text-[32px] leading-10 tracking-[calc(-0.05em+var(--tighten-title))] sm:text-[40px]">
             {heading}
           </p>
-          <div className="flex min-h-0 flex-1 items-end justify-center p-4 pb-6 lg:justify-end">
+          {/* the ring is sized from this box so it never gets bigger than the space it has */}
+          <div className="@container-[size] flex min-h-0 flex-1 items-end justify-center p-4 pb-6 lg:justify-end">
             <ConfidenceCircle percent={data[category][selected] * 100} />
           </div>
         </div>

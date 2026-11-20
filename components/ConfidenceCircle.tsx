@@ -34,7 +34,7 @@ export default function ConfidenceCircle({ percent }: { percent: number }) {
   );
 
   return (
-    <div className="relative aspect-square h-full max-h-[384px]">
+    <div className="relative aspect-square w-[min(100cqw,100cqh,384px)] shrink-0">
       <svg viewBox="0 0 384 384" fill="none" className="h-full w-full -rotate-90">
         <circle cx="192" cy="192" r={RADIUS} stroke="#C1C2C3" strokeWidth="3" />
         <circle
