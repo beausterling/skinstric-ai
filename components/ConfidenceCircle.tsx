@@ -25,7 +25,7 @@ export default function ConfidenceCircle({ percent }: { percent: number }) {
             ring.current.style.strokeDashoffset = String(CIRCUMFERENCE * (1 - value / 100));
           }
           if (number.current) {
-            number.current.textContent = value.toFixed(2);
+            number.current.textContent = String(Math.round(value));
           }
         },
       });
@@ -48,8 +48,8 @@ export default function ConfidenceCircle({ percent }: { percent: number }) {
           strokeDashoffset={CIRCUMFERENCE}
         />
       </svg>
-      <p className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-start text-[28px] leading-10 tracking-[-0.05em] sm:text-[40px]">
-        <span ref={number}>0.00</span>
+      <p className="absolute top-1/2 left-1/2 flex -translate-x-[calc(50%-6px)] -translate-y-1/2 items-start text-[28px] leading-10 tracking-[-0.05em] sm:text-[40px]">
+        <span ref={number}>0</span>
         <span className="-mt-3 ml-[1px] text-[16px] sm:text-[24px]">%</span>
       </p>
     </div>
