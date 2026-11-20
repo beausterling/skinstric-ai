@@ -65,6 +65,12 @@ export default function Summary() {
 
   const scores = category === "age" ? sortAges(data.age) : sortScores(data[category]);
   const selected = choices[category];
+  // reset only has something to do after one of the estimates was changed
+  const estimate = topChoices(data);
+  const changed =
+    choices.race !== estimate.race ||
+    choices.age !== estimate.age ||
+    choices.gender !== estimate.gender;
 
   function step(direction: number) {
     const index = categories.findIndex((c) => c.key === category);
@@ -161,8 +167,9 @@ export default function Summary() {
         </p>
         <div className="flex gap-[17px]">
           <button
-            onClick={() => setChoices(topChoices(data))}
-            className="button-text border border-ink px-4 py-[8.5px] transition-colors hover:bg-panel-dark"
+            onClick={() => setChoices(estimate)}
+            disabled={!changed}
+            className="button-text border border-ink px-4 py-[8.5px] transition-[background-color,opacity] enabled:hover:bg-panel-dark disabled:cursor-not-allowed disabled:opacity-30"
           >
             Reset
           </button>
